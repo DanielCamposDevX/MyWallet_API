@@ -1,8 +1,10 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import { AppDataSource } from "./database/data-source.js";
-import router from "./router.js";
+import "reflect-metadata";
+import "./shared/container/index.js";
+import router from "./shared/infra/http/router.js";
+import { AppDataSource } from "./shared/infra/typeorm/data-source.js";
 
 dotenv.config();
 

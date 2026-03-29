@@ -13,6 +13,6 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false
   },
-  "include": ["src/**/*.ts", "src/modules/sessions"],
+  "include": ["src/**/*.ts", "src/modules/sessions", "src/modules/users"],
   "exclude": ["node_modules", "dist"]
 }
