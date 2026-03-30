@@ -1,6 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError.js";
 import { ICreateUserDTO } from "../dtos/ICreateUserDTO.js";
+import { User } from "../infra/typeorm/entities/User.js";
 import { IHashProvider } from "../providers/HashProvider/models/IHashProvider.js";
 import { IUsersRepository } from "../repositories/IUsersRepository.js";
 
@@ -18,7 +19,7 @@ class CreateUserService {
     name,
     email,
     password,
-  }: ICreateUserDTO): Promise<void> {
+  }: ICreateUserDTO): Promise<User> {
     const userAlreadyExists = await this.usersRepository.findByEmail(email);
 
     if (userAlreadyExists) {
@@ -27,11 +28,12 @@ class CreateUserService {
 
     const hashedPassword = await this.hashProvider.generateHash(password);
 
-    await this.usersRepository.create({
+    const user = await this.usersRepository.create({
       name,
       email,
       password: hashedPassword,
     });
+    return user;
   }
 }
 
