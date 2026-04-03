@@ -1,29 +1,13 @@
 import type { Request, Response } from "express";
-import Joi from "joi";
 import { container } from "tsyringe";
 import { FindUserByEmailService } from "../../../../users/services/FindUserByEmailService.js";
 import { AuthenticateUserService } from "../../../services/AuthenticateUserService.js";
 import { FindSessionByTokenService } from "../../../services/FindSessionByTokenService.js";
 import { LogoffUserService } from "../../../services/LogoffUserService.js";
 
-const authenticateSchema = Joi.object({
-  email: Joi.string().email().required(),
-  password: Joi.string().min(3).required(),
-});
-
 class SessionsController {
   public async create(request: Request, response: Response): Promise<Response> {
     const { email, password } = request.body;
-
-    const validation = authenticateSchema.validate(
-      { email, password },
-      { abortEarly: false }
-    );
-
-    if (validation.error) {
-      const errors = validation.error.details.map((detail) => detail.message);
-      return response.status(422).json(errors);
-    }
 
     const findUserByEmailService = container.resolve(FindUserByEmailService);
 

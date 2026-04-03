@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError.js";
-import { User } from "../infra/typeorm/entities/User.js";
+import { User } from "../../users/infra/typeorm/entities/User.js";
 import { ISessionsRepository } from "../repositories/ISessionsRepository.js";
 
 interface IRequest {
