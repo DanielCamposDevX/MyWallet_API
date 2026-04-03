@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { Session } from "../../../modules/sessions/infra/typeorm/entities/Session.js";
+import { Installment } from "../../../modules/installments/infra/typeorm/entities/Installment.js";
 import { SubTransaction } from "../../../modules/subTransactions/infra/typeorm/entities/SubTransaction.js";
 import { Tag } from "../../../modules/tags/infra/typeorm/entities/Tag.js";
 import { Transaction } from "../../../modules/transactions/infra/typeorm/entities/Transaction.js";
@@ -28,6 +29,7 @@ export const AppDataSource = new DataSource({
     Session,
     Workspace,
     WorkspaceMember,
+    Installment,
     Tag,
     Transaction,
     SubTransaction,

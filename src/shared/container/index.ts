@@ -1,5 +1,7 @@
 import { container } from "tsyringe";
 import "../../modules/users/providers/index.js";
+import { InstallmentsRepository } from "../../modules/installments/infra/typeorm/repositories/InstallmentsRepository.js";
+import { IInstallmentsRepository } from "../../modules/installments/repositories/IInstallmentsRepository.js";
 import { SessionsRepository } from "../../modules/sessions/infra/typeorm/repositories/SessionsRepository.js";
 import { ISessionsRepository } from "../../modules/sessions/repositories/ISessionsRepository.js";
 import { SubTransactionsRepository } from "../../modules/subTransactions/infra/typeorm/repositories/SubTransactionsRepository.js";
@@ -16,6 +18,10 @@ import { WorkspacesRepository } from "../../modules/workspaces/infra/typeorm/rep
 import { IWorkspacesRepository } from "../../modules/workspaces/repositories/IWorkspacesRepository.js";
 
 container.registerSingleton<IUsersRepository>("UsersRepository", UsersRepository);
+container.registerSingleton<IInstallmentsRepository>(
+  "InstallmentsRepository",
+  InstallmentsRepository
+);
 container.registerSingleton<ISessionsRepository>(
   "SessionsRepository",
   SessionsRepository,

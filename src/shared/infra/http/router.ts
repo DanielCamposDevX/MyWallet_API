@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { installmentsRoutes } from "../../../modules/installments/infra/http/routes/installments.routes.js";
 import { sessionRoutes } from "../../../modules/sessions/infra/http/routes/sessions.routes.js";
 import { subTransactionsRoutes } from "../../../modules/subTransactions/infra/http/routes/subTransactions.routes.js";
 import { tagsRoutes } from "../../../modules/tags/infra/http/routes/tags.routes.js";
@@ -11,6 +12,7 @@ const router = Router();
 router.use(usersRoutes);
 router.use(sessionRoutes);
 router.use(workspacesRoutes);
+router.use(installmentsRoutes);
 router.use(tagsRoutes);
 router.use(transactionsRoutes);
 router.use(subTransactionsRoutes);
