@@ -17,9 +17,15 @@ app.use(router);
 app.use(errorMiddleware);
 
 const port = Number(process.env.PORT ?? 5000);
+const shouldRunMigrations =
+  (process.env.TYPEORM_RUN_MIGRATIONS ?? "true").toLowerCase() === "true";
 
 AppDataSource.initialize()
-  .then(() => {
+  .then(async () => {
+    if (shouldRunMigrations) {
+      await AppDataSource.runMigrations();
+    }
+
     app.listen(port, () => {
       console.log(`Servidor rodando na porta ${port}`);
     });

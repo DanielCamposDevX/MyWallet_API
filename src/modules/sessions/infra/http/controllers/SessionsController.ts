@@ -4,9 +4,14 @@ import { FindUserByEmailService } from "../../../../users/services/FindUserByEma
 import { AuthenticateUserService } from "../../../services/AuthenticateUserService.js";
 import { FindSessionByTokenService } from "../../../services/FindSessionByTokenService.js";
 import { LogoffUserService } from "../../../services/LogoffUserService.js";
+import type { AuthorizationHeader } from "../../../../../shared/utils/request/authorizationHeaderSchema.js";
+import type { CreateSessionBody } from "../request/SessionsRequest.js";
 
 class SessionsController {
-  public async create(request: Request, response: Response): Promise<Response> {
+  public async create(
+    request: Request<Record<string, never>, unknown, CreateSessionBody>,
+    response: Response
+  ): Promise<Response> {
     const { email, password } = request.body;
 
     const findUserByEmailService = container.resolve(FindUserByEmailService);
@@ -19,8 +24,11 @@ class SessionsController {
     return response.status(200).json(data);
   }
 
-  public async delete(request: Request, response: Response): Promise<Response> {
-    const { authorization } = request.headers;
+  public async delete(
+    request: Request,
+    response: Response
+  ): Promise<Response> {
+    const { authorization } = request.headers as AuthorizationHeader;
     const token = authorization?.replace("Bearer ", "") ?? "";
 
     const findSessionBytoken = container.resolve(FindSessionByTokenService);
@@ -30,7 +38,7 @@ class SessionsController {
     const logoffUser = container.resolve(LogoffUserService);
 
     await logoffUser.execute(session.id);
-    return response.status(200);
+    return response.status(200).send();
   }
 }
 

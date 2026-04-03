@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { AppError } from "../../../shared/errors/AppError.js";
-import { User } from "../../users/infra/typeorm/entities/User.js";
+import { Session } from "../infra/typeorm/entities/Session.js";
 import { ISessionsRepository } from "../repositories/ISessionsRepository.js";
 
 interface IRequest {
@@ -14,7 +14,7 @@ class FindSessionByTokenService {
     private sessionsRepository: ISessionsRepository
   ) {}
 
-  public async execute({ token }: IRequest): Promise<User> {
+  public async execute({ token }: IRequest): Promise<Session> {
     const session = await this.sessionsRepository.findByToken(token);
 
     if (!session) {

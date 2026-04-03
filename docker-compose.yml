@@ -34,7 +34,8 @@ services:
       DB_USER: mywallet
       DB_PASSWORD: mywallet
       DB_NAME: mywallet
-      TYPEORM_SYNCHRONIZE: "true"
+      TYPEORM_SYNCHRONIZE: "false"
+      TYPEORM_RUN_MIGRATIONS: "true"
     ports:
       - "5000:5000"
 

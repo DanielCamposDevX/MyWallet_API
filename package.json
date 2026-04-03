@@ -9,6 +9,10 @@
     "build": "tsc",
     "start": "node dist/app.js",
     "start:prod": "npm run build && npm run start",
+    "typeorm": "tsx ./node_modules/typeorm/cli.js",
+    "migration:run": "npm run typeorm -- migration:run -d src/shared/infra/typeorm/data-source.ts",
+    "migration:revert": "npm run typeorm -- migration:revert -d src/shared/infra/typeorm/data-source.ts",
+    "migration:show": "npm run typeorm -- migration:show -d src/shared/infra/typeorm/data-source.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
