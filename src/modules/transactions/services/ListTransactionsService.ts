@@ -6,6 +6,7 @@ import { ITransactionsRepository } from "../repositories/ITransactionsRepository
 interface IRequest {
   workspaceId: string;
   userId: string;
+  month?: string;
 }
 
 @injectable()
@@ -15,14 +16,14 @@ class ListTransactionsService {
     private transactionsRepository: ITransactionsRepository
   ) {}
 
-  public async execute({ workspaceId, userId }: IRequest): Promise<Transaction[]> {
+  public async execute({ workspaceId, userId, month }: IRequest): Promise<Transaction[]> {
     const isMember = await this.transactionsRepository.isMember(workspaceId, userId);
 
     if (!isMember) {
       throw new AppError("Forbidden workspace access", 403);
     }
 
-    return this.transactionsRepository.listByWorkspaceId(workspaceId);
+    return this.transactionsRepository.listByWorkspaceId(workspaceId, month);
   }
 }
 

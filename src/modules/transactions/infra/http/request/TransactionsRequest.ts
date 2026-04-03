@@ -52,8 +52,13 @@ const createAdvancedTransactionSchema = {
   body: createAdvancedTransactionBodySchema,
 };
 
+const listTransactionQuerySchema = yup.object({
+  month: yup.string().matches(/^\d{4}-(0[1-9]|1[0-2])$/, "month must follow YYYY-MM"),
+});
+
 const listTransactionSchema = {
   params: workspaceParamsSchema,
+  query: listTransactionQuerySchema,
 };
 
 const updateTransactionSchema = {
@@ -74,6 +79,7 @@ export type CreateAdvancedTransactionBody = yup.InferType<
   typeof createAdvancedTransactionBodySchema
 >;
 export type UpdateTransactionBody = yup.InferType<typeof updateTransactionBodySchema>;
+export type ListTransactionQuery = yup.InferType<typeof listTransactionQuerySchema>;
 
 class TransactionsRequest {
   public async createSimple(

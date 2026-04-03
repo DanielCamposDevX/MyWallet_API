@@ -26,6 +26,9 @@ export class Installment {
   @Column({ type: "int", unsigned: true, default: 0 })
   paidInstallments!: number;
 
+  @Column({ type: "decimal", precision: 12, scale: 2, default: "0.00" })
+  installmentAmount!: string;
+
   @CreateDateColumn()
   createdAt!: Date;
 

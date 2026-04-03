@@ -4,6 +4,7 @@ interface ICreateInstallmentDTO {
   description: string;
   installmentCount: number;
   paidInstallments: number;
+  installmentAmount: string;
 }
 
 export { ICreateInstallmentDTO };

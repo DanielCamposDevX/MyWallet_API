@@ -15,12 +15,18 @@ const createInstallmentBodySchema = yup.object({
   description: yup.string().min(2).max(255).required().label("description"),
   installmentCount: yup.number().integer().min(1).required().label("installmentCount"),
   paidInstallments: yup.number().integer().min(0).required().label("paidInstallments"),
+  installmentAmount: yup.number().moreThan(0).required().label("installmentAmount"),
 });
 
 const updateInstallmentBodySchema = yup.object({
   description: yup.string().min(2).max(255),
   installmentCount: yup.number().integer().min(1),
   paidInstallments: yup.number().integer().min(0),
+  installmentAmount: yup.number().moreThan(0),
+});
+
+const listInstallmentQuerySchema = yup.object({
+  month: yup.string().matches(/^\d{4}-(0[1-9]|1[0-2])$/, "month must follow YYYY-MM"),
 });
 
 const createInstallmentSchema = {
@@ -30,6 +36,7 @@ const createInstallmentSchema = {
 
 const listInstallmentSchema = {
   params: installmentWorkspaceParamsSchema,
+  query: listInstallmentQuerySchema,
 };
 
 const updateInstallmentSchema = {
@@ -47,6 +54,7 @@ export type InstallmentWorkspaceParams = yup.InferType<
 export type InstallmentParams = yup.InferType<typeof installmentParamsSchema>;
 export type CreateInstallmentBody = yup.InferType<typeof createInstallmentBodySchema>;
 export type UpdateInstallmentBody = yup.InferType<typeof updateInstallmentBodySchema>;
+export type ListInstallmentQuery = yup.InferType<typeof listInstallmentQuerySchema>;
 
 class InstallmentsRequest {
   public async create(

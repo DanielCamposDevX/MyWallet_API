@@ -9,6 +9,7 @@ import { UpdateTransactionService } from "../../../services/UpdateTransactionSer
 import type {
   CreateAdvancedTransactionBody,
   CreateSimpleTransactionBody,
+  ListTransactionQuery,
   TransactionParams,
   UpdateTransactionBody,
   WorkspaceParams,
@@ -63,14 +64,15 @@ class TransactionsController {
   }
 
   public async index(
-    request: Request<WorkspaceParams>,
+    request: Request<WorkspaceParams, unknown, unknown, ListTransactionQuery>,
     response: Response
   ): Promise<Response> {
     const { workspaceId } = request.params;
+    const { month } = request.query;
     const userId = getAuthenticatedUserId(request);
 
     const listTransactions = container.resolve(ListTransactionsService);
-    const transactions = await listTransactions.execute({ workspaceId, userId });
+    const transactions = await listTransactions.execute({ workspaceId, userId, month });
 
     return response.status(200).json(transactions);
   }

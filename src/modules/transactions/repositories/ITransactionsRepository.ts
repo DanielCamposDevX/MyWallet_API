@@ -24,7 +24,7 @@ interface ITransactionsRepository {
     subTransactions: ISubTransactionCreateData[]
   ): Promise<void>;
   findById(id: string): Promise<Transaction | null>;
-  listByWorkspaceId(workspaceId: string): Promise<Transaction[]>;
+  listByWorkspaceId(workspaceId: string, month?: string): Promise<Transaction[]>;
   update(transaction: Transaction): Promise<Transaction>;
   deleteById(id: string): Promise<void>;
 }

@@ -1,5 +1,6 @@
 import { In, Repository } from "typeorm";
 import { AppDataSource } from "../../../../../shared/infra/typeorm/data-source.js";
+import { buildMonthRange } from "../../../../../shared/utils/date/monthRange.js";
 import { SubTransaction } from "../../../../subTransactions/infra/typeorm/entities/SubTransaction.js";
 import { ISubTransactionCreateData } from "../../../../subTransactions/repositories/ISubTransactionsRepository.js";
 import { Tag } from "../../../../tags/infra/typeorm/entities/Tag.js";
@@ -84,15 +85,22 @@ class TransactionsRepository implements ITransactionsRepository {
     });
   }
 
-  public async listByWorkspaceId(workspaceId: string): Promise<Transaction[]> {
-    return this.ormRepository.find({
-      where: { workspaceId },
-      relations: ["subTransactions", "tags"],
-      order: {
-        competenceDate: "DESC",
-        createdAt: "DESC",
-      },
-    });
+  public async listByWorkspaceId(workspaceId: string, month?: string): Promise<Transaction[]> {
+    const { startDate, endDate } = buildMonthRange(month);
+
+    return this.ormRepository
+      .createQueryBuilder("transaction")
+      .leftJoinAndSelect("transaction.subTransactions", "subTransactions")
+      .leftJoinAndSelect("transaction.tags", "tags")
+      .where("transaction.workspaceId = :workspaceId", { workspaceId })
+      .andWhere("transaction.competenceDate BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
+      .orderBy("transaction.competenceDate", "DESC")
+      .addOrderBy("transaction.createdAt", "DESC")
+      .addOrderBy("subTransactions.createdAt", "ASC")
+      .getMany();
   }
 
   public async update(transaction: Transaction): Promise<Transaction> {

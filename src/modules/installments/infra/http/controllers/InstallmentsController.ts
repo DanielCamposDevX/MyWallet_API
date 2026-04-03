@@ -7,6 +7,7 @@ import { ListInstallmentsService } from "../../../services/ListInstallmentsServi
 import { UpdateInstallmentService } from "../../../services/UpdateInstallmentService.js";
 import type {
   CreateInstallmentBody,
+  ListInstallmentQuery,
   InstallmentParams,
   InstallmentWorkspaceParams,
   UpdateInstallmentBody,
@@ -18,7 +19,7 @@ class InstallmentsController {
     response: Response
   ): Promise<Response> {
     const { workspaceId } = request.params;
-    const { description, installmentCount, paidInstallments } = request.body;
+    const { description, installmentCount, paidInstallments, installmentAmount } = request.body;
     const userId = getAuthenticatedUserId(request);
 
     const createInstallment = container.resolve(CreateInstallmentService);
@@ -28,20 +29,22 @@ class InstallmentsController {
       description,
       installmentCount,
       paidInstallments,
+      installmentAmount,
     });
 
     return response.status(201).json(installment);
   }
 
   public async index(
-    request: Request<InstallmentWorkspaceParams>,
+    request: Request<InstallmentWorkspaceParams, unknown, unknown, ListInstallmentQuery>,
     response: Response
   ): Promise<Response> {
     const { workspaceId } = request.params;
+    const { month } = request.query;
     const userId = getAuthenticatedUserId(request);
 
     const listInstallments = container.resolve(ListInstallmentsService);
-    const installments = await listInstallments.execute({ workspaceId, userId });
+    const installments = await listInstallments.execute({ workspaceId, userId, month });
 
     return response.status(200).json(installments);
   }

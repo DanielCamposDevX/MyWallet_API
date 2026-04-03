@@ -6,6 +6,7 @@ import { IInstallmentsRepository } from "../repositories/IInstallmentsRepository
 interface IRequest {
   workspaceId: string;
   userId: string;
+  month?: string;
 }
 
 @injectable()
@@ -15,14 +16,14 @@ class ListInstallmentsService {
     private installmentsRepository: IInstallmentsRepository
   ) {}
 
-  public async execute({ workspaceId, userId }: IRequest): Promise<Installment[]> {
+  public async execute({ workspaceId, userId, month }: IRequest): Promise<Installment[]> {
     const isMember = await this.installmentsRepository.isMember(workspaceId, userId);
 
     if (!isMember) {
       throw new AppError("Forbidden workspace access", 403);
     }
 
-    return this.installmentsRepository.listByWorkspaceId(workspaceId);
+    return this.installmentsRepository.listByWorkspaceId(workspaceId, month);
   }
 }
 

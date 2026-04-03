@@ -9,6 +9,7 @@ interface IRequest {
   description: string;
   installmentCount: number;
   paidInstallments: number;
+  installmentAmount: number;
 }
 
 @injectable()
@@ -37,12 +38,17 @@ class CreateInstallmentService {
       throw new AppError("paidInstallments cannot be greater than installmentCount", 400);
     }
 
+    if (data.installmentAmount <= 0) {
+      throw new AppError("installmentAmount must be greater than 0", 400);
+    }
+
     return this.installmentsRepository.create({
       workspaceId: data.workspaceId,
       createdByUserId: data.userId,
       description: data.description,
       installmentCount: data.installmentCount,
       paidInstallments: data.paidInstallments,
+      installmentAmount: String(data.installmentAmount),
     });
   }
 }

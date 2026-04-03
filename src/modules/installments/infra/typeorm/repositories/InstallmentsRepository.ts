@@ -1,5 +1,6 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from "../../../../../shared/infra/typeorm/data-source.js";
+import { buildMonthRange } from "../../../../../shared/utils/date/monthRange.js";
 import { ICreateInstallmentDTO } from "../../../dtos/ICreateInstallmentDTO.js";
 import { IInstallmentsRepository } from "../../../repositories/IInstallmentsRepository.js";
 import { Installment } from "../entities/Installment.js";
@@ -27,11 +28,18 @@ class InstallmentsRepository implements IInstallmentsRepository {
     return !!member;
   }
 
-  public async listByWorkspaceId(workspaceId: string): Promise<Installment[]> {
-    return this.ormRepository.find({
-      where: { workspaceId },
-      order: { createdAt: "DESC" },
-    });
+  public async listByWorkspaceId(workspaceId: string, month?: string): Promise<Installment[]> {
+    const { startDate, endDate } = buildMonthRange(month);
+
+    return this.ormRepository
+      .createQueryBuilder("installment")
+      .where("installment.workspaceId = :workspaceId", { workspaceId })
+      .andWhere("DATE(installment.createdAt) BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
+      .orderBy("installment.createdAt", "DESC")
+      .getMany();
   }
 
   public async findById(id: string): Promise<Installment | null> {

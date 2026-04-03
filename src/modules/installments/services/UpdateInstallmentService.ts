@@ -10,6 +10,7 @@ interface IRequest {
   description?: string;
   installmentCount?: number;
   paidInstallments?: number;
+  installmentAmount?: number;
 }
 
 @injectable()
@@ -51,8 +52,13 @@ class UpdateInstallmentService {
       throw new AppError("paidInstallments cannot be greater than installmentCount", 400);
     }
 
+    if (data.installmentAmount !== undefined && data.installmentAmount <= 0) {
+      throw new AppError("installmentAmount must be greater than 0", 400);
+    }
+
     installment.installmentCount = nextInstallmentCount;
     installment.paidInstallments = nextPaidInstallments;
+    installment.installmentAmount = String(data.installmentAmount ?? installment.installmentAmount);
 
     return this.installmentsRepository.update(installment);
   }
